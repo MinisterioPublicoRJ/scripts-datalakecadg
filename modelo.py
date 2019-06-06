@@ -43,7 +43,6 @@ class File:
             '',
             base_name + '_' + str(datetime.now())[:19]
         )
-        import ipdb;ipdb.set_trace()
         return prep_name + '.csv.gz'
 
     def _process_response(self, resp):
@@ -108,4 +107,4 @@ if __name__ == "__main__":
     file_obj = File(filepath, filename)
 
     # Send data
-    file_obj.post(username, methodname, secretkey) 
+    file_obj.post(username, methodname, secretkey)
