@@ -7,7 +7,7 @@ import requests
 from datetime import datetime
 from hashlib import md5
 
-from io import StringIO
+from io import BytesIO
 
 
 class File:
@@ -20,8 +20,8 @@ class File:
         self.filename = filename
 
     def _load(self, file_path):
-        with open(file_path, 'r', encoding='utf-8-sig') as fobj:
-            buf = StringIO()
+        with open(file_path, 'rb') as fobj:
+            buf = BytesIO()
             buf.write(fobj.read())
             buf.seek(0)
             return buf
@@ -32,7 +32,7 @@ class File:
 
     def compress(self):
         return gzip.compress(
-            self.file_obj.read().encode()
+            self.file_obj.read()
         )
 
     @property
@@ -58,11 +58,12 @@ class File:
 
     def post(self, username, method, secret):
         compressed = self.compress()
+        md5digest = self.calc_md5(compressed)
 
         payload = {
             'filename': self.filename or self._prep_name,
             'nome': username,
-            'md5': self.calc_md5(compressed),
+            'md5': md5digest,
             'method': method,
             'SECRET': secret
         }
